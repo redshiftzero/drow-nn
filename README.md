@@ -1,15 +1,23 @@
 # drow-nn
 
 This is a model which uses a recurrent neural network
-to generate [drow elf](http://forgottenrealms.wikia.com/wiki/Drow) names.
+to generate [drow elf](http://forgottenrealms.wikia.com/wiki/Drow) names. We use
+the Keras high-level deep learning API.
 
-## Running
+## Training
 
 ```
 make data
+make train
 ```
 
-Existing drow names were taken from [this list](http://www.dnd.kismetrose.com/DrowNameList.html).
+Training drow names were taken from [this list](http://www.dnd.kismetrose.com/DrowNameList.html).
+
+## Sampling
+
+```
+make sample
+```
 
 ## References
 
@@ -40,9 +48,6 @@ Project Organization
     │   ├── data           <- Scripts to download or generate data
     │   │   └── make_dataset.py
     │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
     │   │   │                 predictions
     │   │   ├── predict_model.py
@@ -50,4 +55,4 @@ Project Organization
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>.</small></p>

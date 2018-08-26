@@ -28,6 +28,10 @@ requirements:
 data:
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
+## Train Model
+train:
+	$(PYTHON_INTERPRETER) src/models/train_model.py data/processed/input.txt models
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
