@@ -3,6 +3,14 @@
 This is a model which uses a recurrent neural network
 to generate [drow elf](http://forgottenrealms.wikia.com/wiki/Drow) names.
 
+## Running
+
+```
+make data
+```
+
+Existing drow names were taken from [this list](http://www.dnd.kismetrose.com/DrowNameList.html).
+
 ## References
 
 Sutskever, Martens, and Hinton 2011 - [Generating Text with Recurrent Neural Networks](https://www.cs.utoronto.ca/~ilya/pubs/2011/LANG-RNN.pdf)

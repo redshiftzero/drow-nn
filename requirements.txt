@@ -2,6 +2,10 @@
 -e .
 
 # external requirements
+numpy
+keras
+tensorflow
+pandas
 click
 coverage
 flake8
