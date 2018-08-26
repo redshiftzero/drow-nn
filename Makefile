@@ -32,6 +32,10 @@ data:
 train:
 	$(PYTHON_INTERPRETER) src/models/train_model.py data/processed/input.txt models
 
+## Sample from network
+sample:
+	$(PYTHON_INTERPRETER) src/models/predict_model.py models/drow-weights-20-0.8777.hdf5 data/processed/input.txt
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
