@@ -1,17 +1,20 @@
 import click
 import logging
+import sys
 
 import numpy as np
 from keras.callbacks import ModelCheckpoint
+from keras.models import model_from_yaml
 from keras.utils import np_utils
 
 from src.models import network
 
 
 @click.command()
-@click.argument('input_file', type=click.Path(exists=True))
 @click.argument('network_weights', type=click.Path(exists=True))
-def main(network_weights, input_file):
+@click.argument('input_file', type=click.Path(exists=True))
+@click.argument('model_yaml', type=click.Path(exists=True))
+def main(network_weights, input_file, model_yaml):
 
     logger = logging.getLogger(__name__)
     logger.info('sampling from model....')
@@ -27,7 +30,6 @@ def main(network_weights, input_file):
     char_to_int_mapping = dict((char, index) for index, char in enumerate(chars))
     int_to_char_mapping = dict((index, char) for index, char in enumerate(chars))
 
-    # Generate new sequences
     seq_length = 6
     dataX = []
     dataY = []
@@ -37,32 +39,30 @@ def main(network_weights, input_file):
         dataX.append([char_to_int_mapping[char] for char in seq_in])
         dataY.append(char_to_int_mapping[seq_out])
     n_patterns = len(dataX)
-    X = np.reshape(dataX, (n_patterns, seq_length, 1))
-    X = X / float(n_vocab)
-    y = np_utils.to_categorical(dataY)
+    logger.info('{} total patterns for training'.format(n_patterns))
 
-    # LSTM RNN model
-    model = network.DrowSeq2Seq(X, y)
-    model.obj.load_weights(network_weights)
-    model.obj.compile(loss='categorical_crossentropy', optimizer='adam')
+    with open(model_yaml, 'r') as fyaml:
+        model_definition = fyaml.read()
+    model = model_from_yaml(model_definition)
+    model.load_weights(network_weights)
+    model.compile(loss='categorical_crossentropy', optimizer='adam')
     
     # random seed
     start = np.random.randint(0, len(dataX) - 1)
     pattern = dataX[start]
-    print("\"", ''.join([int_to_char_mapping[value] for value in pattern]), "\"")
 
     for i in range(200):
         x = np.reshape(pattern, (1, len(pattern), 1))
         x = x / float(n_vocab)
-        prediction = model.obj.predict(x, verbose=0)
+        prediction = model.predict(x, verbose=0)
         index = np.argmax(prediction)
-        result = int_to_char_mapping[index]
+        result = chr(int_to_char_mapping[index])
         seq_in = [int_to_char_mapping[value] for value in pattern]
-        print(result)
+        sys.stdout.write(result)
         pattern.append(index)
         pattern = pattern[1:len(pattern)]
 
-    print("Done!")
+    print("\nDone!")
 
 
 if __name__ == '__main__':

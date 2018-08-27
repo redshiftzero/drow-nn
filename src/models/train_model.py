@@ -1,4 +1,5 @@
 import click
+import datetime
 import logging
 
 import numpy as np
@@ -10,7 +11,8 @@ from src.models import network
 @click.command()
 @click.argument('input_file', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path(exists=True))
-def main(input_file, output_filepath):
+@click.option('--num_epochs', default=20)
+def main(input_file, output_filepath, num_epochs):
 
     logger = logging.getLogger(__name__)
     logger.info('beginning training...')
@@ -57,7 +59,14 @@ def main(input_file, output_filepath):
                                  save_best_only=True, mode='min')
     callbacks_list = [checkpoint]
 
-    model.obj.fit(X, y, epochs=20, batch_size=128, callbacks=callbacks_list)
+    model.obj.fit(X, y, epochs=num_epochs, batch_size=128, callbacks=callbacks_list)
+
+    # serialize model to YAML
+    model_yaml = model.obj.to_yaml()
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+    with open("models/model-config.yaml", "w") as yaml_file:
+        yaml_file.write(model_yaml)
+    model.obj.save_weights("models/model-{}.hdf5".format(timestamp))
 
 
 if __name__ == '__main__':

@@ -34,7 +34,7 @@ train:
 
 ## Sample from network
 sample:
-	$(PYTHON_INTERPRETER) src/models/predict_model.py models/drow-weights-20-0.8777.hdf5 data/processed/input.txt
+	$(PYTHON_INTERPRETER) src/models/predict_model.py models/drow-weights-04-1.2049.hdf5 data/processed/input.txt models/model-config.yaml
 
 ## Delete all compiled Python files
 clean:
