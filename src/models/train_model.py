@@ -1,9 +1,10 @@
 import click
 import datetime
 import logging
+from time import time
 
 import numpy as np
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.utils import np_utils
 
 from src.models import network
@@ -11,8 +12,9 @@ from src.models import network
 @click.command()
 @click.argument('input_file', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path(exists=True))
-@click.option('--num_epochs', default=20)
-def main(input_file, output_filepath, num_epochs):
+@click.option('--num_epochs', default=10)
+@click.option('--batch-size', default=100)
+def main(input_file, output_filepath, num_epochs, batch_size):
 
     logger = logging.getLogger(__name__)
     logger.info('beginning training...')
@@ -31,7 +33,7 @@ def main(input_file, output_filepath, num_epochs):
     logger.info('{} unique chars in training corpus'.format(n_vocab))
 
     # Generate sequences for training
-    seq_length = 6
+    seq_length = network.SEQ_LENGTH
     dataX = []
     dataY = []
     for i in range(0, n_chars - seq_length, 1):
@@ -55,11 +57,13 @@ def main(input_file, output_filepath, num_epochs):
     model = network.DrowSeq2Seq(X, y)
     model.obj.compile(loss='categorical_crossentropy', optimizer='adam')
     filepath = 'models/drow-weights-{epoch:02d}-{loss:.4f}.hdf5'
-    checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, 
+    checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
                                  save_best_only=True, mode='min')
-    callbacks_list = [checkpoint]
+    tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
+    callbacks_list = [checkpoint, tensorboard]
 
-    model.obj.fit(X, y, epochs=num_epochs, batch_size=128, callbacks=callbacks_list)
+    model.obj.fit(X, y, epochs=num_epochs, batch_size=batch_size,
+                  callbacks=callbacks_list)
 
     # serialize model to YAML
     model_yaml = model.obj.to_yaml()

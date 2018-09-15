@@ -1,17 +1,22 @@
 # drow-nn
 
-This is a model which uses a recurrent neural network
-to generate [drow elf](http://forgottenrealms.wikia.com/wiki/Drow) names. We use
-the Keras high-level deep learning API.
+This code generates new [drow elf](http://forgottenrealms.wikia.com/wiki/Drow) names by using the Keras high-level deep learning API to train a LSTM-based language model on a corpus of existing drow names found online.
+
+## Preprocessing data
+
+```
+make data
+```
+
+Drow names for training were taken from [this list](http://www.dnd.kismetrose.com/DrowNameList.html).
 
 ## Training
 
 ```
-make data
 make train
 ```
 
-Training drow names were taken from [this list](http://www.dnd.kismetrose.com/DrowNameList.html).
+This can take a while, and if you want to use early stopping note that you should wait for all weights to be generated prior to sampling from the model.
 
 ## Sampling
 
@@ -19,10 +24,46 @@ Training drow names were taken from [this list](http://www.dnd.kismetrose.com/Dr
 make sample
 ```
 
-## References
+This will generate drow names, e.g.:
+
+```
+salaghar daereghel
+uldor mulyl
+stra yauntyrr
+na t'erddrinnshar
+zanle abaeir
+charsintra yauthlo
+yana milyek
+im tanor'thal
+ldyrrith faertala
+beloil yauttir
+ondril dlpragh
+lin t'xorlarrin
+brorn menarn
+ch'net melarn
+rin menafin
+afein ahaurvhel'raugaust
+aunirra daeneghel
+jyrdyn meerimyder
+irra hun'ett
+iel dhaulssin
+hardsira dhliriy
+na mhalazza
+barris melarn
+ra doyrdlyn
+daer yauthlo
+uordrin fllifar
+uornrae mhalazza
+oilrn hllistyn
+h tuin'tarl
+arbreena t'lodra
+ayas melarn
+alannora mhlzek
+```
+
+## Read More
 
 Sutskever, Martens, and Hinton 2011 - [Generating Text with Recurrent Neural Networks](https://www.cs.utoronto.ca/~ilya/pubs/2011/LANG-RNN.pdf)
-
 
 Project Organization
 ------------
